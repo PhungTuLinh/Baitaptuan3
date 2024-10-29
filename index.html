@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script src="../js/jquery-3.7.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <style>
+        .title {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container text-center mt-4">
+        <img src="../img/HEADER.PNG" class="img-fluid" alt="Header Image" width="100%">
+    </div>
+
+
+    <div class="container text-left my-3">
+        <button class="btn" data-toggle="modal" data-target="#registerModal">Đăng ký</button>
+        <button class="btn ">Đăng nhập</button>
+    </div>
+    <div class="title">
+        <h1> DANH SÁCH THAM GIA ĐỘI ROBOCON KHOA CNTT</h1>
+    </div>
+
+    <div class="container">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã thành viên</th>
+                    <th>Họ tên</th>
+                    <th>Lớp</th>
+                    <th>Ngày tham gia</th>
+                    <th>Điện thoại</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody id="participantList">
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Đăng ký tham gia</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <form id="registrationForm">
+                        <div class="form-group">
+                            <label for="memberID">Mã thành viên</label>
+                            <input type="text" class="form-control" id="memberID" placeholder="K16-123456789" required>
+                            <div class="invalid-feedback">Mã thành viên phải theo mẫu K16-xxxxxxxxx</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="fullName">Họ tên</label>
+                            <input type="text" class="form-control" id="fullName" placeholder="Tran Thanh Kha" required>
+                            <div class="invalid-feedback">Họ tên chỉ được chứa chữ, không được có số.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="class">Lớp</label>
+                            <input type="text" class="form-control" id="class" placeholder="DHKTPM16ATT" required>
+                            <div class="invalid-feedback">Lớp phải đúng định dạng.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="joinDate">Ngày tham gia</label>
+                            <input type="date" class="form-control" id="joinDate" required>
+                            <div class="invalid-feedback">Ngày tham gia phải sau ngày hiện tại 30 ngày.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNumber">Điện thoại</label>
+                            <input type="text" class="form-control" id="phoneNumber" placeholder="090x-xxx-xxx" required>
+                            <div class="invalid-feedback">Số điện thoại phải theo mẫu 0xxx-xxx-xxx.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="example@iuh.edu.vn" required>
+                            <div class="invalid-feedback">Email phải theo mẫu xxxxx@iuh.edu.vn.</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+                    </form>
+
+                    <!-- <div class="row mt-3">
+                        <div class="col-12">
+                            <p>SVTH:......</p>
+                            <p>Mã số sinh viên: 22654661</p>
+                            <p>Lớp: DHTMDT18B</p>
+
+                        </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            let stt = 1;
+
+
+            $('#registrationForm').on('submit', function(e) {
+                e.preventDefault();
+                if (validateForm()) {
+
+                    let memberID = $('#memberID').val();
+                    let fullName = $('#fullName').val();
+                    let className = $('#class').val();
+                    let joinDate = $('#joinDate').val();
+                    let phoneNumber = $('#phoneNumber').val();
+                    let email = $('#email').val();
+
+
+                    $('#participantList').append(`
+                    <tr>
+                        <td>${stt++}</td>
+                        <td>${memberID}</td>
+                        <td>${fullName}</td>
+                        <td>${className}</td>
+                        <td>${joinDate}</td>
+                        <td>${phoneNumber}</td>
+                        <td>${email}</td>
+                    </tr>
+                `);
+
+                    // Đóng modal sau khi lưu
+                    $('#registerModal').modal('hide');
+                    // Reset form
+                    $('#registrationForm')[0].reset();
+                }
+            });
+
+
+            function validateForm() {
+                let isValid = true;
+
+
+                let memberID = $('#memberID').val();
+                let memberIDPattern = /^K16-\d{9}$/;
+                if (!memberIDPattern.test(memberID)) {
+                    $('#memberID').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#memberID').removeClass('is-invalid');
+                }
+
+
+                let fullName = $('#fullName').val();
+                let fullNamePattern = /^[A-Z][a-z]*(\s[A-Z][a-z]*)+$/;
+                if (!fullNamePattern.test(fullName)) {
+                    $('#fullName').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#fullName').removeClass('is-invalid');
+                }
+
+
+                let className = $('#class').val();
+                let classPattern = /^[A-Z0-9]{11}$/;
+                if (!classPattern.test(className)) {
+                    $('#class').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#class').removeClass('is-invalid');
+                }
+
+
+                let joinDate = new Date($('#joinDate').val());
+                let today = new Date();
+                let validDate = new Date(today.setDate(today.getDate() + 30));
+                if (joinDate <= validDate) {
+                    $('#joinDate').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#joinDate').removeClass('is-invalid');
+                }
+
+
+                let phoneNumber = $('#phoneNumber').val();
+                let phonePattern = /^0\d{3}-\d{3}-\d{3}$/;
+                if (!phonePattern.test(phoneNumber)) {
+                    $('#phoneNumber').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#phoneNumber').removeClass('is-invalid');
+                }
+
+                let email = $('#email').val();
+                let emailPattern = /^[a-zA-Z0-9._%+-]+@iuh\.edu\.vn$/;
+                if (!emailPattern.test(email)) {
+                    $('#email').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#email').removeClass('is-invalid');
+                }
+
+                return isValid;
+            }
+        });
+    </script>
+
+</body>
+
+</html>
